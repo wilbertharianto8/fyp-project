@@ -1,0 +1,184 @@
+@charset "utf-8";
+
+@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+@import url('layout.css');
+@import url('header.css');
+@import url('sidebar.css');
+@import url('charts.css');
+@import url('marketing.css');
+
+@import url('firefox.css');
+
+
+:root{
+	--main-color: rgb(36, 142, 194);
+	--main-color-contrast: white;
+	--main-highlight: var(--notice-info-low);
+	--main-text-color:black;
+	--corners:0.25em;
+
+	--notice-info-off:whitesmoke;
+	--notice-info-low:lightsteelblue;
+	--notice-info-high:steelblue;
+
+	--notice-fail-off:mistyrose;
+	--notice-fail-low:lightsalmon;
+	--notice-fail-high:darkred;
+
+	--notice-warn-off:gold;
+	--notice-warn-low:orange;
+	--notice-warn-high:orangered;
+
+	/*
+	--notice-pass-off:mistyrose;
+	--notice-pass-low:lightsalmon;
+	--notice-pass-high:darkred;
+	*/
+	--notice-pending-off:white;
+	--notice-pending-low:lightgray;
+	--notice-pending-high:darkgray;
+
+	/*
+	 https://www.mulinblog.com/a-color-palette-optimized-for-data-visualization/
+	*/
+	--data-pallette-0: #4d4d4d; /* grey   */
+	--data-pallette-1: #5da5da; /* blue   */
+	--data-pallette-2: #faa43a; /* orange */
+	--data-pallette-3: #60bd68; /* green  */
+	--data-pallette-4: #f17cb0; /* pink   */
+	--data-pallette-5: #b2912f; /* brown  */
+	--data-pallette-6: #b276b2; /* purple */
+	--data-pallette-7: #decf3f; /* yellow */
+	--data-pallette-8: #f15854; /* red    */
+}
+
+
+/**** custom components ***/
+
+blockquote.fail{
+	background-color:var(--notice-fail-off);
+	border:0.3em solid var(--notice-fail-low);
+	color: var(--notice-fail-high);
+	font-weight: bold;
+	padding:1em;
+	border-radius: 0.25em;
+}
+
+blockquote.warn{
+	background-color:var(--notice-warn-off);
+	border:0.3em solid var(--notice-warn-low);
+	color: var(--notice-warn-high);
+	font-weight: bold;
+	padding:1em;
+	border-radius: 0.25em;
+}
+
+blockquote.info{
+	background-color:var(--notice-info-off);
+	border:0.3em solid var(--notice-info-low);
+	color: var(--notice-info-high);
+	font-weight: bold;
+	padding:1em;
+	border-radius: 0.25em;
+}
+
+.showhide{
+	display:none;
+}
+
+ol#toc{
+	list-style-type: upper-roman;
+}
+
+button.showhide {
+	display:block;
+	position:absolute;
+	right:0px;
+	top:0px;
+	background:transparent;
+	border:0;
+}
+
+.fail{
+	/* border-color:darkred;
+	background-color:darkred;
+	color:white;*/
+	font-weight:bold;
+}
+
+input.fail{
+	border-color:red;
+	box-shadow: 0 0 10px red;
+}
+
+input.warn{
+	border-color:orange;
+	box-shadow: 0 0 10px orange;
+}
+
+input.pass{
+	border-color:green;
+	box-shadow: 0 0 10px green;
+}
+
+ps-filedrop{
+	position:relative;
+	display:inline-block;
+	width:200px;
+	margin:0.3em;
+}
+
+#help details {
+	margin-left: 1em;
+}
+
+#help summary {
+	display: inline;
+	font-size: larger;
+	font-weight: bold;
+}
+
+.experimental{
+	display:none;
+}
+
+.preload{
+	display:block;
+	animation: heartbeat 1.5s infinite;
+	animation-delay: 0s;
+	color: var(--main-color);
+	text-align: center;
+}
+
+.waitload{
+	display:none;
+	opacity:0;
+}
+
+@media all and (min-width: 400px) {
+	main {
+		flex: 10 0px;
+		order: 2;
+	}
+	section {
+		flex: 0 auto;
+	}
+	section:last-of-type {
+		order: 3;
+	}
+	section:first-of-type {
+		order: 1;
+	}
+	footer {
+		order: 4;
+	}
+}
+
+@media print {
+	h1, h2, h3 {
+		page-break-before: always;
+	}
+	h2:first-of-type{
+		page-break-before: avoid;
+	}
+}
