@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <script type="text/javascript" nomodule>
+   window.location = 'browsercheck.html';
+ </script>
+ <!-- Google Analytics -->
+ <script>
+  window.ga=window.ga||function(){(window.ga.q=ga.q||[]).push(arguments)};window.ga.l=+new Date;
+  window.ga('create', 'UA-59013760-4', 'auto');
+  window.ga('send', 'pageview');
+ </script>
+ <script async src='https://www.google-analytics.com/analytics.js'></script>
+ <!-- End Google Analytics -->
+
+ <meta charset="utf-8" />
+
+<!--
+ <link rel="stylesheet" href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css">
+ <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
+ <script src='https://unpkg.com/@material/mwc-button@0.10.0/mwc-button.js'></script>
+-->
+
+ <script async src='https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.5/jszip.min.js'></script>
+ <script async src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.8/FileSaver.js" integrity="sha256-htuR1Owx8i9hm4h4Y4d/FjlPLoj2teQmhJ5WnNSo3w0=" crossorigin="anonymous"></script>
+ <script async src='https://cdnjs.cloudflare.com/ajax/libs/jsSHA/2.3.1/sha.js'></script>
+
+ <script async src="https://unpkg.com/esprima@~4.0/dist/esprima.js"></script>
+ <script async src="https://unpkg.com/filbert@0.1.20/filbert.js"></script>
+
+ <script src='scripts/widgets/deepdiff-opts.js'></script>
+
+
+ <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:400,500,700,400italic|Material+Icons">
+ <link rel="shortcut icon" type="image/png" href="favicon.png"/>
+
+
+ <link rel='stylesheet' href='main.css' />
+ <link rel='stylesheet' href='style/main.css' />
+ <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+</head>
+<body>
+ <header>
+  <h1 title='Measure of Integrity of Submissions of Students'>
+   <span>Measure</span>
+   <sup style='font-size:small;font-variant:small-caps;'>of</sup>
+   <span>Integrity</span>
+   <sup style='font-size:small;font-variant:small-caps;'>of</sup>
+   <span>Submissions</span>
+   <sup style='font-size:small;font-variant:small-caps;'>of</sup>
+   <span>Students</span>
+  </h1>
+  <button title='Donate' onclick='window.location="https://www.patreon.com/plaidsheep"'><a class='marketing' href='https://www.patreon.com/plaidsheep'>&#9829;</a></button>
+  <nav class='waitload'>
+   <button id='Bug' title='Report a Bug' onclick='window.location="https://gitlab.com/jefferey-cave/miss/issues"'>&#128027;</button>
+   <button id='Exception' title='Cause an error' class='experimental' onclick='throw new Error("Test Exception")'>&#128163;</button>
+   <button id='Epub' title='Epub' class='experimental'>&#128366;</button>
+   <button id='Print' title='Printer Friendly'>&#128438;</button>
+   <button id='DeleteAll' title='Remove Comparision Data'>&#128465;</button>
+   <button id='Download' title='Save to your computer'>&#128228;</button>
+   <button id='RestoreClicker' title='Restore a Comparison'>
+    &#128229;
+    <ps-filedrop id='Restore' accept="application/zip,.miss" style='position:absolute;top:0;left:0;opacity:0;'></ps-filedrop>
+   </button>
+  </nav>
+  <ps-alert></ps-alert>
+ </header>
+ <h1 class='preload'>&hellip;</h1>
+ <section class='waitload'>
+  <ps-panel icon='settings' can-maximize='false'>
+   <form is='deepdiff-opts'>
+
+    <label title='Enter a title for submissions that uniquely identifies this collection of assignments'>Title</label>
+    <input name='title' type='text' placeholder='Enter a title for your submissions' />
+
+    <label title='Determines the algorithm used when calculating the similiarity of documents'>Algorithm Variant</label>
+    <select name='algorithm' list='algorithms'>
+     <option value='test'>Test</option>
+    </select>
+   </form>
+  </ps-panel>
+  <ps-panel icon='collections' can-maximize='false'>
+   <h1>Submissions</h1>
+   <!-- <ps-filedrop id='UploadSubmission'  title='Upload A Single Submission' >&#10010;</ps-filedrop> -->
+   <!-- <ps-filedrop id='UploadSubmissions' title='Upload a Zipped Bundle of Submissions'>&#10010;+&#128476;</ps-filedrop> -->
+   <ps-filedrop id='UploadSubmissions' accept='.zip' title='Upload a Zipped Bundle of Submissions'>&#10010; Add ZIP File</ps-filedrop>
+   <ps-submission-list id='submissions'></ps-submission-list>
+  </ps-panel>
+ </section>
+ <main class='waitload'>
+  <ps-tabpanel>
+   <ps-panel icon='bubble_chart'>
+    <h1>Force</h1>
+    <ps-forcedirected id='forcechart'></ps-forcedirected>
+   </ps-panel>
+   <ps-panel icon='bar_chart'>
+    <h1>Listing</h1>
+    <ps-tornadochart id='tornadochart'></ps-tornadochart>
+   </ps-panel>
+   <ps-panel icon='show_chart'>
+    <h1>Table</h1>
+    <ps-matrixmap id='matrixmap'></ps-matrixmap>
+   </ps-panel>
+   <ps-panel id='compare' icon='compare' class='experimental'>
+    <h1>Comparison</h1>
+    <ps-similaritycompare id='simcompare'></ps-similaritycompare>
+   </ps-panel>
+   <ps-panel id='help' icon='help'>
+    <h1>FAQ</h1>
+    <ul>
+     <li><a target="_blank" href='https://gitlab.com/jefferey-cave/miss/wikis/home'>Wiki</a></li>
+     <li><a target="_blank" href='https://gitlab.com/jefferey-cave/miss/issues'>Issues</a></li>
+    </ul>
+    <details open>
+     <summary>Quick Start</summary>
+     <p>
+      Do you have a class full of students whose assignments you would like to
+      check? Are they in a ZIP file? Perfect. (If you don't, you can <a href='./samples/sampleassignment.zip' alt='Download a sample if you '>download a sample</a>)
+     </p>
+     <ol>
+      <li>Click that button over to the left. (the one called <code>`Add Files`</code>)</li>
+      <li>Upload the file</li>
+      <li>Watch the pretty charts</li>
+     </ol>
+     <p>
+      If everything is working properly, you should be able to upload the file
+      the way you downloaded it from your <abbr title='Learning Management System'>LMS</abbr>
+     </p>
+    </details>
+    <details>
+     <summary>Browser Support</summary>
+     <p>
+      Use Google Chrome.
+     </p>
+     <p>
+      There are some issues with browswer support. If you are interested, you
+      can view the <a href='browsercheck.html'>browser support page</a> which
+      has information on how to turn on and off advanced features.
+     </p>
+    </details>
+    <details>
+     <summary>What file formats are supported?</summary>
+     <p>
+      MISS was originally designed to help with an introductory python class,
+      and was shortly followed by a Javascript class.
+     </p>
+     <ul>
+      <li>Python (*.py)</li>
+      <li>Javascript (*.js)</li>
+      <li>FASTA (*.dna)</li>
+      <li>Plain English (*.txt)</li>
+     </ul>
+     <p>
+      Files are tokenized based on their file type (identified by extension)
+      which gives them some contextual interpretation.
+     </p>
+     <p>see also <a href='https://gitlab.com/jefferey-cave/miss/wikis/Parsing'>Parsing</a></p>
+    </details>
+    <details>
+     <summary>How do you protect my data?</summary>
+     <p>
+      Very simply: I don't store any.
+     </p>
+     <p>
+      No data is transferred off you computer (aside from some basic usage stats).
+     </p>
+     <p>
+      see also <a href='https://gitlab.com/jefferey-cave/miss/wikis/Goals'>Project Goals</a>
+     </p>
+    </details>
+    <details>
+     <summary>So this program tells me who is cheating?</summary>
+     <p><strong>No!</strong> Used properly it will tell you who is <strong>not</strong> cheating.</p>
+     <p>If you already suspect students of cheating, this may demonstrate they aren't.</p>
+     <p>see also <a href='https://gitlab.com/jefferey-cave/miss/wikis/Interpreting-Results'>Interpreting Results</a></p>
+    </details>
+    <details>
+     <summary>Licenses</summary>
+     <p>
+      The software is free to use.
+     </p>
+     <p>
+      If you find this useful, do feel free to give a leave a
+      <a href=''>tip or donation</a> If you use it regularily,
+      consider getting in touch so we can talk about your successes
+      and failures. If your organization uses it regularily, please
+      contact me to discuss some potentially enterprise features.
+     </p>
+    </details>
+   </ps-panel>
+  </ps-tabpanel>
+
+ </main>
+ <section style='display:none;'>
+Sidebar 2
+ </section>
+ <footer>
+  <div>
+   <a href=''>Jeff Cave</a>
+   &mdash; Privacy
+   &mdash; <a href='docs/readme.md'>Purpose</a>
+   &mdash; <a href='?experimental'>Experimental Mode</a>
+  </div>
+  <pre style='float:right;'>
+   $Id: 58e4f47b80ab962ebab292bf610d17a1fdfa0bdc $
+   $Date$
+  </div>
+ </footer>
+
+ <script type="module" src="./scripts/index.js"></script>
+</body>
+</html>
