@@ -29,10 +29,10 @@ import {swAlgoWebWorker} from './swAlgoWebWorker.js';
 AlgorithmRegistry.processors['smithwaterman'] = AlgorithmRegistry.processors['smithwaterman-swAlgoCell'];
 
 // test to ensure the software is capable of running
-AlgorithmRegistry.processors['smithwaterman-swAlgoGpu'].available = (typeof window.OffscreenCanvas !== 'undefined');
-if(!AlgorithmRegistry.processors['smithwaterman-swAlgoGpu'].available){
-	AlgorithmRegistry.processors['smithwaterman'] = AlgorithmRegistry.processors['smithwaterman-swAlgoCell'];
-}
+// AlgorithmRegistry.processors['smithwaterman-swAlgoGpu'].available = (typeof window.OffscreenCanvas !== 'undefined');
+// if(!AlgorithmRegistry.processors['smithwaterman-swAlgoGpu'].available){
+// 	AlgorithmRegistry.processors['smithwaterman'] = AlgorithmRegistry.processors['smithwaterman-swAlgoCell'];
+// }
 
 const threads = {};
 const scores = {

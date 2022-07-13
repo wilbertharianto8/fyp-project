@@ -5,7 +5,7 @@ if(!global.Browser){
 let ExpectedAlgos = [
 	'smithwaterman',
 	'smithwaterman-swAlgoCell',
-	'smithwaterman-swAlgoGpu'
+	// 'smithwaterman-swAlgoGpu'
 ];
 
 describe('Algorithm Selection', function() {
@@ -53,14 +53,14 @@ describe('Algorithm Selection', function() {
 		assert.equal(text,'smithwaterman-swAlgoCell','Selecting general algorithm results in CPU');
 	}));
 
-	it('GPU disabled on Firefox', async function(){
-		let self = this;
-		return Browser.run(async (browser)=>{
-			if(browser.type !== 'firefox') return self.skip('Firefox not supported');
-			let select = await browser.findElement(Browser.By.css('form select[name="algorithm"]'));
-			let opt = await select.findElement(Browser.By.css('option[value="smithwaterman-swAlgoGpu"]'));
-			let attr = await opt.getAttribute('disabled');
-			assert.isNotNull(attr,'Enabled has been set');
-		});
-	});
+	// it('GPU disabled on Firefox', async function(){
+	// 	let self = this;
+	// 	return Browser.run(async (browser)=>{
+	// 		if(browser.type !== 'firefox') return self.skip('Firefox not supported');
+	// 		let select = await browser.findElement(Browser.By.css('form select[name="algorithm"]'));
+	// 		// let opt = await select.findElement(Browser.By.css('option[value="smithwaterman-swAlgoGpu"]'));
+	// 		let attr = await opt.getAttribute('disabled');
+	// 		assert.isNotNull(attr,'Enabled has been set');
+	// 	});
+	// });
 });
